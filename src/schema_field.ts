@@ -2,7 +2,7 @@ import { MessagePayload, Message } from './types';
 import { Channel } from './channel';
 
 export class SchemaField {
-    schemaError: any = {};
+    private schemaError: any = {};
     constructor(private channel: Channel, private field: any) {
 
         channel.addMessageHandler(Message.VALUE_CHANGED, (payload: MessagePayload) => {
@@ -10,7 +10,7 @@ export class SchemaField {
         });
 
         channel.addMessageHandler(Message.SCHEMA_FIELD_ERROR, (payload: MessagePayload) => {
-            this.schemaError = payload.error;
+            this.schemaError = payload.schemaError;
         })
 
     }

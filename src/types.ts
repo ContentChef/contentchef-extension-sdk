@@ -28,12 +28,12 @@ export enum Message {
     GET_REPOSITORY = 'getRepository',
     LIST_REPOSITORY = 'listRepository',
     CREATE_REPOSITORY = 'createRepository',
-    UPDATE_REPOSITORY = 'update_repository',
+    UPDATE_REPOSITORY = 'updateRepository',
     // PUBLISHINGCHANNEL
-    GET_PUBLISHING_CHANNEL = 'getPublishing_channel',
-    LIST_PUBLISHING_CHANNEL = 'listPublishing_channel',
-    CREATE_PUBLISHING_CHANNEL = 'createPublishing_channel',
-    UPDATE_PUBLISHING_CHANNEL = 'updatePublishing_channel',
+    GET_PUBLISHING_CHANNEL = 'getPublishingChannel',
+    LIST_PUBLISHING_CHANNEL = 'listPublishingChannel',
+    CREATE_PUBLISHING_CHANNEL = 'createPublishingChannel',
+    UPDATE_PUBLISHING_CHANNEL = 'updatePublishingChannel',
 
     // PUBLISH
     PUBLISH_CONTENT = 'publishContent'
@@ -64,5 +64,6 @@ export interface MessagePayload {
     messageId: number;
     source: string;
     result?: any;
-    error?: any
+    error?: any;
+    schemaError?: any;
 }

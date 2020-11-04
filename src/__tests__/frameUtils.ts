@@ -23,3 +23,9 @@ export async function connectForTest(iframe: HTMLIFrameElement, message: any): P
 
     })
 }
+
+export function wait(milliseconds: number = 200) {
+    return new Promise((resolve) => {
+        setTimeout(() => resolve(), milliseconds);
+    });
+}
