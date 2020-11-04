@@ -1,20 +1,20 @@
 import { Channel } from './channel';
-import { MessageType, API } from './types';
+import { Message, API, APIPublishMessage } from './types';
 
-const events: string[] = [
-    MessageType.PUBLISH_CONTENT,
+const events: APIPublishMessage[] = [
+    Message.PUBLISH_CONTENT,
 ];
 
 export function publishApi(channel: Channel) {
-    const handler = (eventType: MessageType) => {
+    const handler = (eventType: Message) => {
         return async (filters: any) => {
             return channel.call(eventType, filters);
         }
     }
 
     return events.reduce((acc, event) => {
-        acc[event] = handler(event as MessageType);
+        acc[event] = handler(event as Message);
         return acc;
     }, 
-    {} as API);
+    {} as API<APIPublishMessage>);
 }

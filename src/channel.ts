@@ -1,4 +1,4 @@
-import { MessagePayload, MessageType } from './types';
+import { MessagePayload, Message } from './types';
 
 export function connect (currentWindow: Window, onSuccess: (channel: Channel, message: any) => void) {
     waitForConnection(currentWindow, (initializationMessage: any) => {
@@ -12,7 +12,7 @@ function waitForConnection(currentWindow: Window, onSuccess: Function) {
     const onConnectListener = (event: MessageEvent) => {
         const message = event.data;
         if(
-            message.type === MessageType.CONNECT
+            message.type === Message.CONNECT
         ) {
             currentWindow.removeEventListener('message', onConnectListener);
             onSuccess(message);
@@ -23,7 +23,7 @@ function waitForConnection(currentWindow: Window, onSuccess: Function) {
 
 function createSendFunction(source: string, parentWindow: Window) {
     let messageCount = 0;
-    return (type: MessageType, value: any) => {
+    return (type: Message, value: any) => {
         const id = messageCount++;
         parentWindow.postMessage(<MessagePayload>{
             type,
@@ -70,13 +70,13 @@ export class Channel {
     }
 
     send(type: string, value: any) {
-        this.sendEvent(type as MessageType, value);
+        this.sendEvent(type as Message, value);
     }
 
     // For promise like behaviour / for api calls on main app
     call(type: string, value: any) {
 
-        const messageId = this.sendEvent(type as MessageType, value);
+        const messageId = this.sendEvent(type as Message, value);
 
         return new Promise((resolve, reject) => {
             this.responseHandlers[messageId] = { resolve, reject }
@@ -84,7 +84,7 @@ export class Channel {
         
     }
 
-    addMessageHandler(event: MessageType, handler: Function) {
+    addMessageHandler(event: Message, handler: Function) {
         if(this.messageHandlers[event]) {
             this.messageHandlers[event].push(handler);
             return;

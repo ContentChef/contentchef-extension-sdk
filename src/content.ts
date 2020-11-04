@@ -1,23 +1,23 @@
-import { API, MessageType } from './types';
+import { API, Message, APIContentMessage } from './types';
 import { Channel } from './channel';
 
-const events: string[] = [
-    MessageType.CREATE_CONTENT,
-    MessageType.GET_CONTENT,
-    MessageType.UPDATE_CONTENT,
-    MessageType.LIST_CONTENT
+const events: APIContentMessage[] = [
+    Message.CREATE_CONTENT,
+    Message.GET_CONTENT,
+    Message.UPDATE_CONTENT,
+    Message.LIST_CONTENT
 ];
 
 export function contentApi(channel: Channel) {
-    const handler = (eventType: MessageType) => {
+    const handler = (eventType: Message) => {
         return async (filters: any) => {
             return channel.call(eventType, filters);
         }
     }
 
     return events.reduce((acc, event) => {
-        acc[event] = handler(event as MessageType);
+        acc[event] = handler(event as Message);
         return acc;
     }, 
-    {} as API);
+    {} as API<APIContentMessage>);
 }

@@ -1,23 +1,23 @@
-import { API, MessageType } from './types';
+import { API, APIDefinitionMessage, Message } from './types';
 import { Channel } from './channel';
 
-const events: string[] = [
-    MessageType.CREATE_DEFINITION,
-    MessageType.GET_DEFINITION,
-    MessageType.UPDATE_DEFINITION,
-    MessageType.LIST_DEFINITION
+const events: APIDefinitionMessage[] = [
+    Message.CREATE_DEFINITION,
+    Message.GET_DEFINITION,
+    Message.UPDATE_DEFINITION,
+    Message.LIST_DEFINITION
 ];
 
 export function definitionApi(channel: Channel) {
-    const handler = (eventType: MessageType) => {
+    const handler = (eventType: Message) => {
         return async (filters: any) => {
             return channel.call(eventType, filters);
         }
     }
 
     return events.reduce((acc, event) => {
-        acc[event] = handler(event as MessageType);
+        acc[event] = handler(event as Message);
         return acc;
     }, 
-    {} as API);
+    {} as API<APIDefinitionMessage>);
 }

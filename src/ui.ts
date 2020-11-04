@@ -1,5 +1,5 @@
 import { Channel } from './channel';
-import { MessageType } from './types';
+import { Message } from './types';
 
 export default class UI {
     document: Document;
@@ -46,7 +46,7 @@ export default class UI {
     changeHeight(height?: number) {
           const heightToSend = height === undefined ? Math.ceil(document.documentElement.getBoundingClientRect().height) : height;
           if (heightToSend !== this.oldHeight) {
-            this.channel.send(MessageType.RESIZE, heightToSend);
+            this.channel.send(Message.RESIZE, heightToSend);
             this.oldHeight = heightToSend
           }
     }

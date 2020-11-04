@@ -1,11 +1,13 @@
 import { connect } from '../channel';
-import { MessageType } from '../types';
+import { Message } from '../types';
+import { createIframe } from './frameUtils';
 
 describe('channel, should', () => {
+    let iframe: HTMLIFrameElement;
+    beforeEach(() => {
+        iframe = createIframe();
+    })
     it('connect successfully', (done) => {
-        const iframe = document.createElement('iframe');
-        document.body.append(iframe);
-
         connect(iframe.contentWindow!, (channel, message) => {
             expect(channel).toBeDefined();
             expect(message).toBeDefined();
@@ -13,64 +15,55 @@ describe('channel, should', () => {
         })
 
         setTimeout(
-            () => iframe.contentWindow?.postMessage({source: 'test-field', type: MessageType.CONNECT, value: { test: 'test' }}, '*'),
+            () => iframe.contentWindow?.postMessage({source: 'test-field', type: Message.CONNECT, value: { test: 'test' }}, '*'),
             1000
         )
     })
 
     it('successfully add handler', (done) => {
-        const iframe = document.createElement('iframe');
-        document.body.append(iframe);
-
         connect(iframe.contentWindow!, (channel) => {
-            channel.addMessageHandler(MessageType.GET_VALUE, (value: any) => {
+            channel.addMessageHandler(Message.GET_VALUE, (value: any) => {
                 expect(value).toBeDefined();
             })
-            expect(channel.messageHandlers[MessageType.GET_VALUE].length).toBe(1);
+            expect(channel.messageHandlers[Message.GET_VALUE].length).toBe(1);
 
             done()
         })
 
         setTimeout(
-            () => iframe.contentWindow?.postMessage({source: 'test-field', type: MessageType.CONNECT, value: { test: 'test' }}, '*'),
+            () => iframe.contentWindow?.postMessage({source: 'test-field', type: Message.CONNECT, value: { test: 'test' }}, '*'),
             1000
         )
     })
 
     it('add handler and successfully trigger', (done) => {
-        const iframe = document.createElement('iframe');
-        document.body.append(iframe);
-
         connect(iframe.contentWindow!, (channel) => {
-            channel.addMessageHandler(MessageType.GET_VALUE, (data: any) => {
+            channel.addMessageHandler(Message.GET_VALUE, (data: any) => {
                 const { value } = data.value;
                 expect(value).toBe('test');
             })
-            expect(channel.messageHandlers[MessageType.GET_VALUE].length).toBe(1);
+            expect(channel.messageHandlers[Message.GET_VALUE].length).toBe(1);
 
             
             window.addEventListener('message', message => {
-                if(message.data.type === MessageType.GET_VALUE) {
-                    iframe.contentWindow?.postMessage({messageId: message.data.messageId, source: 'test-field', type: MessageType.RESULT, value: {value: 'test'}, result: {value: 'test'}}, '*');
+                if(message.data.type === Message.GET_VALUE) {
+                    iframe.contentWindow?.postMessage({messageId: message.data.messageId, source: 'test-field', type: Message.RESULT, value: {value: 'test'}, result: {value: 'test'}}, '*');
                 }
             })
             
-            channel.call(MessageType.GET_VALUE, {}).then((result: any) => {
+            channel.call(Message.GET_VALUE, {}).then((result: any) => {
                 expect(result.value).toEqual('test');
                 done();
             });
         })
 
         setTimeout(
-            () => iframe.contentWindow?.postMessage({source: 'test-field', type: MessageType.CONNECT, value: { test: 'test' }}, '*'),
+            () => iframe.contentWindow?.postMessage({source: 'test-field', type: Message.CONNECT, value: { test: 'test' }}, '*'),
             1000
         );
     })
 
     it('send one-off event', (done) => {
-        const iframe = document.createElement('iframe');
-        document.body.append(iframe);
-
         window.addEventListener('message', (event) => {
             expect(event.data.type).toBe('test');
             iframe.contentWindow?.postMessage({source: 'test-field', type: 'test', value: { test: 'test' }}, '*');
@@ -78,7 +71,7 @@ describe('channel, should', () => {
         
         connect(iframe.contentWindow!, (channel) => {
             
-            channel.addMessageHandler('test' as MessageType, (data: any) => {
+            channel.addMessageHandler('test' as Message, (data: any) => {
                 expect(data.value.test).toEqual('test')
                 done();
             })
@@ -87,7 +80,7 @@ describe('channel, should', () => {
         })
 
         setTimeout(
-            () => iframe.contentWindow?.postMessage({source: 'test-field', type: MessageType.CONNECT, value: { test: 'test' }}, '*'),
+            () => iframe.contentWindow?.postMessage({source: 'test-field', type: Message.CONNECT, value: { test: 'test' }}, '*'),
             1000
         );
     })
