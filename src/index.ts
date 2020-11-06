@@ -12,7 +12,7 @@ function initialize(currentWindow: Window) {
         connectDeferred.promise.then(([channel, initMessage]: [Channel, any]) => {
             const restApi = createRestApi(channel);
             const ui = new UI(channel, currentWindow);
-            const field = new SchemaField(channel, initMessage);
+            const field = new SchemaField(channel, initMessage.field);
 
             const api = {
                 api: {...restApi},

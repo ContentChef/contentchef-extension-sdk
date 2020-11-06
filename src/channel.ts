@@ -50,7 +50,7 @@ export class Channel {
         })
     }
 
-    handleMessage(event: MessageEvent<MessagePayload>) {
+    handleMessage(event: MessageEvent) {
         if('result' in event.data) {
             const responseHandler = this.responseHandlers[event.data.messageId];
             responseHandler.resolve(event.data.result);

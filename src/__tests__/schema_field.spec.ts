@@ -15,20 +15,20 @@ describe('SchemaField, should', () => {
         const iframe = createIframe();
         const { channel, message } = await connectForTest(iframe, {field: 'string-value'});
         const schemaField = new SchemaField(channel, message.value.field);
-        expect(schemaField.getField()).toEqual('string-value');
+        expect(schemaField.getFieldValue()).toEqual('string-value');
 
         iframe.contentWindow?.postMessage({ type: Message.VALUE_CHANGED, value: 'new-string-value' }, '*');
 
         await wait();
 
-        expect(schemaField.getField()).toBe('new-string-value');
+        expect(schemaField.getFieldValue()).toBe('new-string-value');
     });
 
     it('correctly handle schema error event', async () => {
         const iframe = createIframe();
         const { channel, message } = await connectForTest(iframe, {field: 'string-value'});
         const schemaField = new SchemaField(channel, message.value.field);
-        expect(schemaField.getField()).toEqual('string-value');
+        expect(schemaField.getFieldValue()).toEqual('string-value');
         expect(schemaField.getSchemaError()).toEqual({});
 
         iframe.contentWindow?.postMessage({ type: Message.SCHEMA_FIELD_ERROR, schemaError: {validations: [], errorType: 'test'} }, '*');
@@ -42,7 +42,7 @@ describe('SchemaField, should', () => {
         const iframe = createIframe();
         const { channel, message } = await connectForTest(iframe, {field: 'string-value'});
         const schemaField = new SchemaField(channel, message.value.field);
-        expect(schemaField.getField()).toEqual('string-value');
+        expect(schemaField.getFieldValue()).toEqual('string-value');
 
         window.addEventListener('message', (event) => {
             if(event.data.type === Message.SET_VALUE) {
@@ -51,7 +51,7 @@ describe('SchemaField, should', () => {
             }
         })
 
-        const result: any = await schemaField.setField('new-string-value');
+        const result: any = await schemaField.setFieldValue('new-string-value');
 
         expect(result.success).toBeTruthy();
         expect(result.value).toEqual('new-string-value');
