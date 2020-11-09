@@ -318,7 +318,7 @@ describe('api, should', () => {
     expect(updatedPubCh.name).toBe('test-update-publishing-channel');
   });
 
-  fit('correctly receive and send messages for publish api', async () => {
+  it('correctly receive and send messages for publish api', async () => {
     const iframe = createIframe();
     const { channel } = await connectForTest(iframe, { test: 'test' });
     const api = createRestApi(channel);
